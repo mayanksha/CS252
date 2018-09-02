@@ -5,10 +5,13 @@ FROM ubuntu:16.04
 RUN useradd -ms /bin/bash bajrang 
 
 RUN mkdir /home/bajrang/server
-RUN sudo apt-get  install -y build-essential git python
-cd /home/bajrang/server
-RUN git clone https://github.com/mayanksha/CS252
-RUN cd CS252
-RUN gcc server.c && ./a.out 
+RUN apt-get update 
+RUN apt-get install -y build-essential git python
+RUN cd /home/bajrang/server
+RUN git clone https://github.com/mayanksha/CS252 /home/bajrang/server
+CMD ["cd", "CS252"]
 
+CMD ["cd", "/home/bajrang/server/A1"]
+CMD ["gcc", "server.c"]
+CMD ["bash", "./a.out"]
 EXPOSE 8000
