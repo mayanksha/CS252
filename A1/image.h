@@ -9,7 +9,7 @@ char* parse_query(char *s){
 
     char* result;
     result = (char*)malloc(200*sizeof(char));
-
+	/*strcat(result, "{\r\n");*/
     if(p1){
         p1+=8;
         char* p2 = strstr(s," HTTP");
@@ -35,6 +35,7 @@ char* parse_query(char *s){
         result[i]='\0';
     }
 
+	/*strcat(result, "\r\n}\r\n");*/
     return result;
 }
 
