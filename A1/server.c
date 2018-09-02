@@ -3,6 +3,7 @@
 /****************** SERVER CODE ****************/
 
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <netinet/in.h>
 #include <string.h>
@@ -11,12 +12,28 @@
 #include <unistd.h>
 
 #define  REQ_BUFFER_MAX_SIZE 65536
-	// 3*4 (IP Address) + 1 * 3 (. dots) + 1 (: colon) + 5 (Port number) + 1 (Null character)
+// 3*4 (IP Address) + 1 * 3 (. dots) + 1 (: colon) + 5 (Port number) + 1 (Null character)
 #define  HOST_SIZE 22 
 struct requestHeaders {
 	char request[REQ_BUFFER_MAX_SIZE];
 	char host[];
 };
+
+unsigned long long getFileSize(FILE* fptr){
+	unsigned long long fsize;
+	if (fptr == NULL){
+		printf("File not found!\n");
+		return 1;
+	}
+	else {
+		fseek(fptr, 0, SEEK_END);
+		fsize = ftell(fptr);
+		rewind(fptr);
+		printf("File contains %lld bytes!\n", fsize);
+	}
+	return fsize;
+}
+
 void handleHTTPReq(int fd){
 	/*int maxBufferSize = 65536;
 	 *char request[maxBufferSize];*/
@@ -69,57 +86,46 @@ int main(){
 
 	/*---- Listen on the socket, with 5 max connection requests queued ----*/
 	int c = 0;
-	char htmlFile[100] = "foo.html";
+	char image[100] = "images/car1.jpg";
 
 	FILE * fptr;
-	/*fptr = fopen(htmlFile, "r");*/
-	unsigned long long fsize;
-	/*    if (fptr == NULL){
-	 *        printf("File not found!\n");
-	 *        return 1;
-	 *    }
-	 *    else {
-	 *        printf("Found file %s\n", htmlFile);
-	 *
-	 *        fseek(fptr, 0, SEEK_END);
-	 *        fsize = ftell(fptr);
-	 *        rewind(fptr);
-	 e
-	 *        printf("File contains %lld bytes!\n", fsize);
-	 *    }*/
+	fptr = fopen(image, "r");
+	unsigned long long fsize = getFileSize(fptr);
 
-	/*    char* fileBuffer=(char*) malloc(sizeof(char)* fsize);
-	 *    size_t readBytes = fread(fileBuffer, sizeof(char), fsize, fptr);
-	 *    printf("Bytes read = %d\n", fsize);
-	 *    fprintf(stdout, fileBuffer);
-	 **/
-
+	printf("Size of image = %lld", fsize);
 	while(1){
 
-	bind(welcomeSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
 
-	if(listen(welcomeSocket,5)==0)
-		printf("I'm listening Count c = %d\n", c++);
-	else
-		printf("Error\n");
+		bind(welcomeSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
+		if(listen(welcomeSocket,5)==0)
+			printf("I'm listening Count c = %d\n", c++);
+		else
+			printf("Error\n");
 
-	addr_size = sizeof serverStorage;
-	newSocket = accept(welcomeSocket, (struct sockaddr *) &serverStorage, &addr_size);
+		addr_size = sizeof serverStorage;
+		newSocket = accept(welcomeSocket, (struct sockaddr *) &serverStorage, &addr_size);
 
-	handleHTTPReq(newSocket);
-	char a[100] = "Hello World!";
-	send(newSocket, a, 100, 0);
-	/*write(newSocket, a, 100);*/
-	/*    while(fsize > 0){
-	 *        int bytes_written = write(newSocket, fileBuffer, fsize);
-	 *        if (bytes_written <= 0) {
-	 *            perror("ERROR writing to socket\n");
-	 *        }
-	 *
-	 *        fsize -= bytes_written;
-	 *        printf("Bytes written = %d, remaining = %d\n", bytes_written, fsize);
-	 *    }*/
-	close(newSocket);
+		handleHTTPReq(newSocket);
+		char headerBuffer[10000], data2[200],
+			fileBuffer[100000];
+		strcpy (headerBuffer, "HTTP/1.1 200 OK\r\nContent-Length: ");
+        /* content-length: */
+        sprintf(data2, "%lld", fsize);
+        strcat (headerBuffer, data2);
+        strcat (headerBuffer, "\r\n");
+        /* content-type: */
+        printf ("Content-Type: %s\n", data2);
+        strcat (headerBuffer, "image/jpg");
+        headerBuffer[strlen(headerBuffer)] = '\0';
+
+		strcat(headerBuffer, "Connection: Keep-alive\r\n\r\n");
+		write (newSocket, headerBuffer, strlen(headerBuffer));
+		fread (fileBuffer, sizeof(char), fsize+1, fptr);
+		fclose(fptr);
+		write (newSocket, fileBuffer, fsize);
+
+
+		close(newSocket);
 	}
 
 	return 0;

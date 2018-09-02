@@ -3,5 +3,5 @@
 *.swq
 *.swr
 # Object Files
-*.out.
-*.o.
+*.out
+*.o
