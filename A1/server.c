@@ -54,14 +54,14 @@ char* handleHTTPReq(int fd, int flag){
 	int bytes_recvd = recv(fd, request, request_buffer_size - 1, 0);
 	printf("%s\n\n", request);
 	strncpy(req_300, request, 299);
-	data* values;
 
     char* p1 = strstr(request,"?string=");
 	char* query = parse_query(req_300);
 	char* send_data = (char*)malloc(1000*sizeof(char));
 
 	if (p1){
-		sprintf(send_data, "{cars:%d, dogs:%d, cats:%d, trucks:%d}", values->cars, values->dogs, values->cats, values->trucks);
+		data* values = parse(query);
+		sprintf(send_data, "{\"cars\":%d, \"dogs\":%d, \"cats\":%d, \"trucks\":%d}", values->cars, values->dogs, values->cats, values->trucks);
 	}
 	else {
 		strcat(send_data, query);
@@ -78,6 +78,7 @@ void query_response(int fd, char* send_data){
 
 	strcpy (headerBuffer, "HTTP/1.1 200 OK\r\n");
 	strcat(headerBuffer, "Connection: Keep-alive\r\n");
+	strcat(headerBuffer, "Access-Control-Allow-Origin: *\r\n");
 	strcat(headerBuffer, "Content-Type: application/json\r\n\r\n");
 
 	/*strcat(headerBuffer, "Content-Length: ");
@@ -107,6 +108,7 @@ void image_response(char* imageName, int newSocket, char* send_data) {
 	strcat (headerBuffer, data2);
 	strcat (headerBuffer, "\r\n");
 	strcat(headerBuffer, "Content-Type: ");
+	strcat(headerBuffer, "Access-Control-Allow-Origin: *\r\n");
 	strcat (headerBuffer, "image/jpg\r\n\r\n");
 	/* content-type: */
 
