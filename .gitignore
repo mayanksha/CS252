@@ -5,3 +5,4 @@
 # Object Files
 *.out
 *.o
+vendor/
