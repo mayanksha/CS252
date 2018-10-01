@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<body>
+<b>Search Employee by-</b>
+<form action="index.php" method="post">
+    &nbsp Employee ID: <input type="text" name="ID"> Last name: <input type="text" name="name"> Department no: <input type="text" name="dept_name"> <br><br>
+<input type="submit"><br>
+</form>
+<br>
+<b>Find number of employees in Department - </b>
+<form action="index1.php" method="post">
+    &nbsp Department no: <input type="text" name="dept_no"> <br><br>
+<input type="submit">
+</form>
+<br>
+<b>Display people sorted by tenure - </b>
+<form action="index2.php" method="post">
+    &nbsp Department no: <input type="text" name="dept_no2"> <br><br>
+<input type="submit">
+</form>
+<br>
+
+<b>Find the sex ratio in a Department - </b>
+<form action="index3.php" method="post">
+    &nbsp Department no: <input type="text" name="dept_no3"> <br><br>
+<input type="submit">
+</form>
+<br>
+<b>Find the salary sex ratio in a Department - </b>
+<form action="index4.php" method="post">
+    &nbsp Department no: <input type="text" name="dept_no4"> <br><br>
+<input type="submit">
+</form>
+<br>
+
+</body>
+</html>
