@@ -1,0 +1,52 @@
+<ion-header>
+	<ion-header>
+		<ion-toolbar>
+			<ion-buttons slot="start">
+				<ion-menu-button></ion-menu-button>
+			</ion-buttons>
+			<ion-title>Mark Proxy</ion-title>
+		</ion-toolbar>
+	</ion-header>
+</ion-header>
+<ion-content>
+	<ion-grid>
+		<ion-row>
+			<ion-col col-6 offset-3 text-center>
+				<div *ngIf="!success">
+					<form [formGroup]="form">
+						<ion-item>
+							<ion-input required type="text" placeholder="Course Code" formControlName="courseCode"></ion-input>
+						</ion-item>
+						<ion-button shape="round" color="primary" [disabled]="!form.valid" (click)="onSubmit()">Get All Proxy Requests for {{form.value.courseCode}} Course</ion-button>
+					</form>
+					<div *ngIf="students.length">
+						<form [formGroup]="studentsForm">
+							<ion-item *ngFor="let c of students;">
+								<ion-label><p>{{c.rollno}} |	{{c.name}} | 
+									<span *ngIf="c.proxy_marked" style="color:green">MARKED</span>
+									<span *ngIf="!c.proxy_marked" style="color:orange">WAITING</span>
+									</p></ion-label>
+									<ion-checkbox (ionChange)="updateCheckedOptions(c, $event.checked)"></ion-checkbox>
+							</ion-item>
+							<ion-button shape="round" color="primary" [disabled]="!studentsForm.valid" (click)="onStudentSubmit()">Mark Proxy for these</ion-button>
+						</form>	
+					</div>
+					<!--<div>
+			 -	<pre>{{studentsForm.value | json}}</pre>
+			 -	<pre>{{studentsForm.valid | json}}</pre>
+			 -</div>-->
+				</div>
+			</ion-col>
+		</ion-row>
+		<div *ngIf="success">
+			<div *ngIf="success == 1">
+				<img src={{green}}><br>
+				<h4>{{successString}}</h4>
+			</div>
+			<div *ngIf="success == 2">
+				<img src={{red}}><br>
+				<h3>{{failureString}}</h3>
+			</div>
+		</div>
+	</ion-grid>
+</ion-content>

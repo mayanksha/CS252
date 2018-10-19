@@ -1,49 +1,51 @@
-<?php 
-	if (!empty($_POST['first'])){
-		echo "First";
-	}
-	if (!empty($_POST['second'])){
-		echo "Second";
-	}
-?>
-
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
 <title>CS252 Lab 4</title>
-<script>
-	function show(val){
+<!--<script>
+function show(val){
 	val = val.id
-	if (val == 'first'){
-		elem = document.getElementById('one');
-		elem2 = document.getElementById('first');
-	elem.style.display = "";
-	elem2.style.display = "none";
+		if (val == 'first'){
+			elem = document.getElementById('one');
+			elem2 = document.getElementById('first');
+			setTimeout(() => {
+			elem.style.display = "";
+			elem2.style.display = "none";
+
+}, 10);
 }
 else if (val == 'sec'){
-		elem = document.getElementById('two');
-		elem2 = document.getElementById('sec');
-	elem.style.display = "";
-	elem2.style.display = "none";
+	elem = document.getElementById('two');
+	elem2 = document.getElementById('sec');
+	setTimeout(() => {
+
+}, 10);
+elem.style.display = "";
+elem2.style.display = "none";
 }
 else if (val == 'third'){
-		elem = document.getElementById('three');
-		elem2 = document.getElementById('third');
-	elem.style.display = "";
-	elem2.style.display = "none";
+	elem = document.getElementById('three');
+	elem2 = document.getElementById('third');
+	setTimeout(() => {
+
+}, 10);
+elem.style.display = "";
+elem2.style.display = "none";
 }
-	console.log(val);
+console.log(val);
 }	
 </script>
+-->
 </head>
 <body>
 </body>
 
-<h3>The Police Station with  slowest response time to an FIR:</h3><br>
 <?php
-	echo "<form onsubmit='return false' onsubmit='return false' ;
-		action='index.php/first'><button id='first' onclick='show(this)'>Click here to know</button></form>";
+if (!empty($_POST)){
+	$openValue = array_keys($_POST)[0];
+}
+/*action='index.php/first'><button id='first' onclick='show(this)'>Click here to know</button></form>";*/
 require_once __DIR__ . "/vendor/autoload.php";
 $conn = (new MongoDB\Client)->cs252;
 $coll = $conn->fir;
@@ -65,9 +67,9 @@ function printArray($array){
 }
 function max_attribute_in_array($array, $prop) {
 	$temp = max(array_map(function($o) use($prop) {
-                            return $o->$prop;
-                         },
-							 $array));
+		return $o->$prop;
+	},
+		$array));
 	$idVal = '';
 	foreach($array as $p){
 		if ($p->timeDiff == $temp){
@@ -109,18 +111,8 @@ foreach ($cursor as $document){
 	array_push($pol, $temp);
 }
 
-echo "<div id='one' style='display:none'>";
 $maxID = max_attribute_in_array($pol, 'timeDiff');
 $cursor = $coll->findOne(['_id' => $maxID]);
-echo "<b>FIR Number</b>:	", $cursor['FIR_REG_NUM'], "<br>"; 
-echo "<b>Police Station</b>:	", $cursor['PS'], "<br>"; 
-echo "<b>District</b>:	", $cursor['DISTRICT'], "<br>"; 
-echo "<b>Zone_Name</b>:	", $cursor['ZONE_NAME'], "<br>"; 
-echo "<b>Status</b>:	", $cursor['Status'], "<br>"; 
-echo "<b>Act_Section</b>:	"; 
-printArray($cursor['Act_Section']);
-echo "<hr>"; 
-echo "</div>";
 
 $keyArr = array_keys($laws);
 $max = 0;
@@ -151,19 +143,44 @@ foreach($keyArr as $a){
 		$max = $districts[$a];
 	}
 }
+echo "<h3>The Police Station with  slowest response time to an FIR:</h3>";
+echo "<form action='index.php'  method='post' >
+	<button name='first' id='first' type='submit''>Click here to know</button>
+	</form>";
 echo "<h3>Most and least uniquely applied FIRs</h3>";
-echo "<form onsubmit='return false' method='post' action='index.php/second'><button id='sec' onclick='show(this)'>Click here to know</button></form>";
-echo "<div id='two' style='display:none'>";
+echo "<form action='index.php'  method='post' >
+	<button name='second' id='second' type='submit''>Click here to know</button>
+	</form>";
+echo "<h3>The District with maximum number of FIRs registered: <br></h3>";
+echo "<form action='index.php'  method='post' >
+	<button name='third' id='third' type='submit''>Click here to know</button>
+	</form>";
+echo "<hr>";
+echo "<h2>Output Window: <br></h2>";
+if (isset($openValue) && $openValue == 'first'){
+	echo "<div id='one'>";
+	echo "<b>FIR Number</b>:	", $cursor['FIR_REG_NUM'], "<br>"; 
+	echo "<b>Police Station</b>:	", $cursor['PS'], "<br>"; 
+	echo "<b>District</b>:	", $cursor['DISTRICT'], "<br>"; 
+	echo "<b>Zone_Name</b>:	", $cursor['ZONE_NAME'], "<br>"; 
+	echo "<b>Status</b>:	", $cursor['Status'], "<br>"; 
+	echo "<b>Act_Section</b>:	"; 
+	printArray($cursor['Act_Section']);
+	echo "</div>";
+}
+else if (isset($openValue) && $openValue == 'second'){
+	echo "<div id='two'>";
 	echo "<h3>The Act Section which has been violated most is :</h3><br>";
 	echo "<b>Section $maxLaw - Criminal Intimidation</b>";
 	echo "<h3>The Act Section which has been violated least is :</h3><br>";
 	echo "<b>Section $minLaw = $min number of times</b>";
-	echo "<hr>";
-echo "</div>";
-echo "<h3>The District with maximum number of FIRs registered: <br></h3>";
-echo "<div id='three' style='display:none'>";
-echo "<b>$maxDist = $max FIRs have been registered!";
-echo "</div>";
-echo "<button id='third' onclick='show(this)'>Click here to know</button>";
+	echo "</div>";
+}
+else if (isset($openValue) && $openValue == 'third'){
+	echo "<div id='three'>";
+	echo "<b>$maxDist = $max FIRs have been registered!";
+	echo "</div>";
+}
+
 ?>
 </html>

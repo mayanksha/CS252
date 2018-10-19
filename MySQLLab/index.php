@@ -2,7 +2,7 @@
 <body>
 
 <?php
-$servername = "localhost";
+$servername = "127.0.0.1";
 $username = "cs252";
 $password = "secret";
 $dbname = "employees";

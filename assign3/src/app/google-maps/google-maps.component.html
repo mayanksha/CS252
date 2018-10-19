@@ -1,0 +1,80 @@
+<ion-header>
+	<ion-header>
+		<ion-toolbar>
+			<ion-title>GPS Tracking</ion-title>
+		</ion-toolbar>
+	</ion-header>
+</ion-header>
+
+<ion-content>
+	<div #map id="map"></div>
+
+	<div *ngIf="currentPos" id="Pos">
+		<p>Lat : {{currentPos.coords.latitude}}</p>	
+		<p>Long : {{currentPos.coords.longitude}}</p>	
+	</div>
+	<br>
+	<ion-button (click)="getNearbyPlaces()">Get Nearby Places</ion-button>
+<ion-list>
+  <ion-item>
+    <ion-label>Select the search radius:</ion-label>
+    <ion-select [(ngModel)]="searchRadius" placeholder="Select One" >
+      <ion-select-option value="500">500 m</ion-select-option>
+      <ion-select-option value="1000">1 km</ion-select-option>
+      <ion-select-option value="2000">2 km</ion-select-option>
+      <ion-select-option value="5000">5 km</ion-select-option>
+      <ion-select-option value="10000">10 km</ion-select-option>
+      <ion-select-option value="20000">20 km</ion-select-option>
+      <ion-select-option value="50000">50 km</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>What would you like to see?</ion-label>
+    <ion-select [(ngModel)]="placeType" placeholder="Select One">
+      <ion-select-option value="school">Schools and Educational Instituions</ion-select-option>
+      <ion-select-option value="restaurant">Restaurants</ion-select-option>
+      <ion-select-option value="library">Library</ion-select-option>
+      <ion-select-option value="post_office">Post_Office</ion-select-option>
+      <ion-select-option value="atm">Banks and ATM</ion-select-option>
+      <ion-select-option value="bus_station">Bus Stand</ion-select-option>
+      <ion-select-option value="train_station">Railway Station</ion-select-option>
+      <ion-select-option value="park">Park</ion-select-option>
+      <ion-select-option value="gym">Gym</ion-select-option>
+      <ion-select-option value="hospital">Hospital</ion-select-option>
+      <ion-select-option value="police">Police</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+</ion-list>
+	<div *ngIf="nearbyPlaces">
+			<h2 >Nearby Places</h2>	
+			<ion-item *ngFor="let p of nearbyPlaces">
+				<ion-icon slot="start" name="home"></ion-icon>
+				<ion-label>
+					{{p.name}}
+				</ion-label>
+				<span>
+					{{p.distance}} km
+				</span>
+			</ion-item>
+	</div>
+</ion-content>
+<!--<ion-content>
+	-<ion-navbar>
+	-    <ion-title>
+	-    Nearby Me Restaurants
+	-    </ion-title>
+	-    <ion-buttons end>
+	-    <button ion-button (click)="showNearbyResto()"><ion-icon name="list"></ion-icon>Restaurants</button>
+	-    </ion-buttons>  
+	-
+	-</ion-navbar>
+	-</ion-header>
+	-
+	-<ion-content padding>
+	-
+	-<div #map id="map"></div> 
+	-
+	-</ion-content>
+	-</ion-content>-->

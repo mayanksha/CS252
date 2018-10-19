@@ -7,3 +7,4 @@
 *.o
 vendor/
 node_modules/*
+src/config/local_config.ts
