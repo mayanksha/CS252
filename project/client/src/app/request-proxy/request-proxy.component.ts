@@ -17,7 +17,7 @@ export class RequestProxyComponent implements OnInit {
 
 	form: FormGroup;
 	courseForm: FormGroup;
-	postEndpoint = 'http://10.0.2.2:3000';
+	postEndpoint = 'https://msharma.me/cs252api';
 	courses: any[];
 	coursesIds = [];
 	rollno: number;

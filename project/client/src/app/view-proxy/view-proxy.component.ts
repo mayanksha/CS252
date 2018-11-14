@@ -10,7 +10,7 @@ import { FormArray, FormGroup, FormBuilder, Validators, ValidatorFn,
 })
 export class ViewProxyComponent implements OnInit {
 
-	postEndpoint = 'http://10.0.2.2:3000';
+	postEndpoint = 'https://msharma.me/cs252api';
 	myProxyRequests: any[] = [];
 	form: FormGroup;
 	success = 0;
